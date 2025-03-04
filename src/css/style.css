@@ -35,7 +35,7 @@ body {
         }
     }
 
-    @media (width <= 360px){
+    @media (width <= 360px) {
         #app {
             header h2 {
                 font-size: 1rem;
@@ -52,7 +52,7 @@ body {
     }
 }
 
-#completed-task-list .task-item label{
+#completed-task-list .task-item label {
     text-decoration: line-through;
 }
 
@@ -62,7 +62,7 @@ body {
     }
 }
 
-.task-item-selected{
+.task-item-selected {
     outline: 1px solid lightgray;
 }
 
@@ -96,18 +96,19 @@ html[data-bs-theme="dark"] .task-item:hover {
     margin-top: 50px;
 
     /* HTML: <div class="loader"></div> */
+
     .loader {
         width: 70px;
         aspect-ratio: 1;
-        background:
-                radial-gradient(farthest-side,#ffa516 90%,#0000) center/16px 16px,
-                radial-gradient(farthest-side,green   90%,#0000) bottom/12px 12px;
+        background: radial-gradient(farthest-side, #ffa516 90%, #0000) center/16px 16px,
+        radial-gradient(farthest-side, green 90%, #0000) bottom/12px 12px;
         background-repeat: no-repeat;
         animation: l17 1s infinite linear;
         position: relative;
     }
+
     .loader::before {
-        content:"";
+        content: "";
         position: absolute;
         width: 8px;
         aspect-ratio: 1;
@@ -123,7 +124,9 @@ html[data-bs-theme="dark"] .task-item:hover {
 }
 
 @keyframes l17 {
-    100%{transform: rotate(1turn)}
+    100% {
+        transform: rotate(1turn)
+    }
 }
 
 #splash .bi-check-circle {

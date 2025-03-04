@@ -1,12 +1,5 @@
 import $ from 'jquery';
 
-// const taskItem = $(".task-item");
-
-// for (let i = 0; i < 5; i++) {
-//     $("#tasks-list").append(taskItem.clone());
-//     $("#completed-task-list").append(taskItem.clone());
-// }
-
 class Task {
     id;
     description;
@@ -19,29 +12,38 @@ class Task {
     }
 }
 
-const taskLists = [new Task(1, "Task 1"),
-new Task(2, "Task 2"),
-new Task(3, "Task 3", true),
-new Task(4, "Task 4"),
-new Task(5, "Task 5", true)];
+const taskLists = [
+    new Task(1, "Task 1"),
+    new Task(2, "Task 2"),
+    new Task(3, "Task 3", true),
+    new Task(4, "Task 4"),
+    new Task(5, "Task 5", true)
+];
 
 renderTasks();
 
+let lastTaskId = taskLists.length;
+
 $("#frm-task").on('submit', () => {
-    $("#tasks-list #no-task").hide();
-    const taskDescription = $("#txt-task").val().trim();
-    const taskId = taskLists.length;
-    taskLists.push(new Task(taskId, taskDescription));
+    const txtTask = $("#txt-task");
+    taskLists.push(new Task(++lastTaskId, txtTask.val().trim()));
     renderTasks();
+    txtTask.val("").trigger('focus');
 });
 
-$('#task-list, #completed-task-list').on('change','.task-item input[type="checkbox"]', (e)=>{
-    const task = taskLists.find(task => task.id === e.currentTarget.id);
-    task.status = !task.status;
-    renderTasks();
+$('#task-list > section, #completed-task-list > section')
+    .on('change', '.task-item input[type="checkbox"]', (e) => {
+        const task = taskLists.find(task => task.id === e.currentTarget.id);
+        task.status = !task.status;
+        renderTasks();
+    }).on('click', '.bi-trash', (e) => {
+        const taskId = $(e.currentTarget).parents(".task-item").find('input[type="checkbox"]').prop("id");
+        const taskIndex = taskLists.findIndex(task => task.id === taskId);
+        taskLists.splice(taskIndex, 1);
+        renderTasks();
 });
 
-function renderTasks(){
+function renderTasks() {
     $("#task-list > section, #completed-task-list > section").empty();
     const noTask = $("#no-task");
     (taskLists.length) ? noTask.hide() : noTask.show();
@@ -52,7 +54,7 @@ function renderTasks(){
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" 
                 value="" id="${id}"
-                ${status ? 'checked': ''}>
+                ${status ? 'checked' : ''}>
                 <label class="form-check-label" 
                 for="${id}">
                   ${description}

@@ -19,14 +19,15 @@ const taskLists = [];
 await loadDbTasks();
 renderTasks();
 
-let lastTaskId = taskLists.length;
+//let lastTaskId = taskLists.length;
 let currentTask = null;
 
-$("#frm-task").on('submit', () => {
+$("#frm-task").on('submit', async () => {
     const txtTask = $("#txt-task");
     if (!currentTask) {
-
-        taskLists.push(new Task(++lastTaskId, txtTask.val().trim()));
+        const taskId = await addDbTask(txtTask.val().trim());
+        if (taskId)
+        taskLists.push(new Task(taskId, txtTask.val().trim()));
     } else {
         currentTask.description = txtTask.val().trim();
         currentTask = null;
@@ -105,7 +106,7 @@ async function loadDbTasks() {
     });
 }
 
-async function addTask(description, status = false) {
+async function addDbTask(description, status = false) {
     try {
         const collectionRef = collection(db, "/task");
         const docRef = await addDoc(collectionRef, {

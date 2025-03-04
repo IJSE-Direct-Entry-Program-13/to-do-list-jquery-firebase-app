@@ -1,7 +1,8 @@
 import './auth.js';
 import $ from 'jquery';
-import {db} from './firebase.config.js';
+import {auth, db} from './firebase.config.js';
 import {query, orderBy, addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc} from "firebase/firestore";
+import {onAuthStateChanged} from "firebase/auth";
 
 class Task {
     id;
@@ -16,11 +17,19 @@ class Task {
 }
 
 const taskLists = [];
+let loggedUser = null;
 
-await loadDbTasks();
-renderTasks();
-$("#loader-wrapper").addClass("d-none");
-$("#task-lists-wrapper").removeClass("d-none");
+onAuthStateChanged(auth, async user=>{
+    if (user){
+        loggedUser = user.email;
+        await loadDbTasks();
+        renderTasks();
+        $("#loader-wrapper").addClass("d-none");
+        $("#task-lists-wrapper").removeClass("d-none");
+    }else{
+        loggedUser = null;
+    }
+});
 
 //let lastTaskId = taskLists.length;
 let currentTask = null;

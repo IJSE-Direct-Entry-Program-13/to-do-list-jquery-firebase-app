@@ -1,28 +1,25 @@
 import {auth} from './firebase.config.js';
 import $ from 'jquery';
-import {GoogleAuthProvider, signInWithPopup, onAuthStateChanged} from "firebase/auth";
+import {GoogleAuthProvider, onAuthStateChanged, signInWithPopup} from "firebase/auth";
 
 const provider = new GoogleAuthProvider();
 
-onAuthStateChanged(auth, user =>{
-    // if (user){
-    //     $("#login").addClass("d-none");
-    //     $("#app").removeClass("d-none");
-    // }else{
-    //     $("#login").removeClass("d-none");
-    //     $("#app").addClass("d-none");
-    // }
+onAuthStateChanged(auth, user => {
+    if (user) {
+        $("#login, #splash").addClass("d-none");
+        $("#app").removeClass("d-none");
+    } else {
+        setTimeout(() => {
+            $("#login").removeClass("d-none");
+            $("#app, #splash").addClass("d-none");
+        }, 1000);
+    }
 });
 
 $("#btn-sign-in-google").on('click', async () => {
     try {
         const result = await signInWithPopup(auth, provider);
-        console.log(result);
-        $("#login").addClass("d-none");
-        $("#app").removeClass("d-none");
-    }catch (e){
-        $("#login").removeClass("d-none");
-        $("#app").addClass("d-none");
+    } catch (e) {
         console.log(e);
     }
 });

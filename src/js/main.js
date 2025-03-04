@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import {app} from './firebase.config.js';
 
 class Task {
     id;
@@ -13,11 +14,11 @@ class Task {
 }
 
 const taskLists = [
-    new Task(1, "Task 1"),
-    new Task(2, "Task 2"),
-    new Task(3, "Task 3", true),
-    new Task(4, "Task 4"),
-    new Task(5, "Task 5", true)
+    // new Task(1, "Task 1"),
+    // new Task(2, "Task 2"),
+    // new Task(3, "Task 3", true),
+    // new Task(4, "Task 4"),
+    // new Task(5, "Task 5", true)
 ];
 
 renderTasks();

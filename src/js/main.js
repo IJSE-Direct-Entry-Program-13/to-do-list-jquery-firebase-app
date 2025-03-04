@@ -13,7 +13,7 @@ class Task {
     status;
 
     constructor(id, description, status = false) {
-        this.id = id;
+        this.id = 'task-' + id;
         this.description = description;
         this.status = status;
     }
@@ -32,19 +32,29 @@ $("#frm-task").on('submit', () => {
     const taskDescription = $("#txt-task").val().trim();
     const taskId = taskLists.length;
     taskLists.push(new Task(taskId, taskDescription));
+    renderTasks();
+});
+
+$('#task-list, #completed-task-list').on('change','.task-item input[type="checkbox"]', (e)=>{
+    const task = taskLists.find(task => task.id === e.currentTarget.id);
+    task.status = !task.status;
+    renderTasks();
 });
 
 function renderTasks(){
+    $("#task-list > section, #completed-task-list > section").empty();
+    const noTask = $("#no-task");
+    (taskLists.length) ? noTask.hide() : noTask.show();
     for (const {id, description, status} of taskLists) {
         const task = `
             <div class="task-item d-flex justify-content-between
         p-2 align-items-center rounded-2 text-secondary-emphasis">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" 
-                value="" id="task-${id}"
+                value="" id="${id}"
                 ${status ? 'checked': ''}>
                 <label class="form-check-label" 
-                for="task-${id}">
+                for="${id}">
                   ${description}
                 </label>
               </div>

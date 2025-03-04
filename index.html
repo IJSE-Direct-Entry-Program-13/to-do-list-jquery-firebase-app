@@ -27,19 +27,19 @@
         <section class="p-2">
           <form id="frm-task" action="javascript:void(0)">
             <div class="d-flex gap-2">
-              <input class="form-control" type="text"
+              <input id="txt-task" class="form-control" type="text"
                      required pattern="\S+"
               placeholder="Eg. Improve UX in Login Screen">
               <button class="btn btn-primary">ADD</button>
             </div>
           </form>
         </section>
-        <section id="tasks-list" class="p-2">
+        <section id="task-list" class="p-2">
 <!--          <h5 class="text-secondary">Tasks</h5>-->
+          <div id="no-task" class="text-center text-secondary-emphasis">
+            No tasks. Add your tasks.
+          </div>
           <section>
-            <div id="no-task" class="text-center text-secondary-emphasis">
-              No tasks. Add your tasks.
-            </div>
 <!--            <div class="task-item d-flex justify-content-between-->
 <!--        p-2 align-items-center rounded-2 text-secondary-emphasis">-->
 <!--              <div class="form-check">-->
@@ -58,6 +58,7 @@
         <section id="completed-task-list" class="p-2">
           <h6 class="text-secondary border-bottom p-2">
             Completed Tasks</h6>
+            <section></section>
         </section>
       </main>
     </section>

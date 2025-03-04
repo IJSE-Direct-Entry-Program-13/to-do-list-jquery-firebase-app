@@ -15,16 +15,17 @@
             <i class="bi bi-check-circle text-primary px-1 fs-1"></i>
             To-do List App
         </h2>
-        <div class="d-flex gap-4 align-items-center">
-            <div class="d-flex gap-2 fs-4">
-            <i class="bi bi-brightness-high"></i>
-            <div class="form-check form-switch">
-                <input id="chk-mode" class="form-check-input" type="checkbox" role="switch">
-                <i class="bi bi-moon-fill"></i>
+        <div class="d-flex gap-3 align-items-center">
+            <div id="mode-wrapper" class="d-flex gap-2 fs-5 align-items-center">
+                <i class="bi bi-brightness-high"></i>
+                <div class="form-check form-switch m-0">
+                    <input id="chk-mode" class="form-check-input" type="checkbox" role="switch">
+                    <i class="bi bi-moon-fill"></i>
+                </div>
             </div>
-        </div>
             <button id="btn-sign-out"
-                    class="btn btn-warning">Sign Out</button>
+                    class="btn btn-warning btn-sm">Sign Out
+            </button>
         </div>
     </header>
     <main>
@@ -60,8 +61,9 @@
                 </section>
             </section>
             <section id="completed-task-list" class="p-2">
-                <h6 class="text-secondary border-bottom p-2">
+                <h6 class="text-secondary border-bottom p-2 text-center">
                     Completed Tasks</h6>
+                <div id="no-completed-task" class="text-center text-secondary-emphasis">No completed tasks yet.</div>
                 <section></section>
             </section>
         </div>
@@ -88,7 +90,7 @@
             Sign in with Google
         </button>
         <footer class="border-top mt-4 pt-2 small">
-            Copyright &copy; 2025. DEP-13 All Rights Reserved.
+            Copyright &copy; 2025 DEP-13.
         </footer>
     </main>
 </section>

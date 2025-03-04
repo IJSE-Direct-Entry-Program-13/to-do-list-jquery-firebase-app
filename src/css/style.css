@@ -5,6 +5,43 @@
 
 body {
     font-family: Ubuntu, sans-serif;
+
+    #app {
+        max-width: 700px;
+        margin: auto;
+    }
+
+    @media (width >= 700px) {
+        #app {
+            border-right: 1px solid gray;
+            border-left: 1px solid gray;
+            min-height: 100vh;
+        }
+    }
+
+    @media (width <= 425px) {
+        #app {
+            header h2 {
+                font-size: 1rem;
+            }
+
+            #mode-wrapper {
+                font-size: 1rem !important;
+            }
+        }
+
+        #login {
+            margin: 5px;
+        }
+    }
+
+    @media (width <= 330px) {
+        #app {
+            #mode-wrapper {
+                display: none !important;
+            }
+        }
+    }
 }
 
 #completed-task-list .task-item label{
@@ -79,4 +116,8 @@ html[data-bs-theme="dark"] .task-item:hover {
 
 @keyframes l17 {
     100%{transform: rotate(1turn)}
+}
+
+#splash .bi-check-circle {
+    font-size: 3rem !important;
 }

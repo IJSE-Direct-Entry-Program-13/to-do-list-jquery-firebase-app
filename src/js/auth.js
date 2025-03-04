@@ -1,14 +1,20 @@
 import {auth} from './firebase.config.js';
 import $ from 'jquery';
-import {signOut, GoogleAuthProvider, onAuthStateChanged, signInWithPopup} from "firebase/auth";
+import {GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut} from "firebase/auth";
+import {initializeApp} from "./app.js";
 
 const provider = new GoogleAuthProvider();
+export const securityContext = {loggedUser: null};
 
-onAuthStateChanged(auth, user => {
-    if (user) {
+/* A listener to detect user status */
+onAuthStateChanged(auth, async (user) => {
+    if (user) {     /* Sign in */
+        securityContext.loggedUser = user.email;
         $("#login, #splash").addClass("d-none");
         $("#app").removeClass("d-none");
-    } else {
+        await initializeApp();
+    } else {        /* Sign out */
+        securityContext.loggedUser = null;
         setTimeout(() => {
             $("#login").removeClass("d-none");
             $("#app, #splash").addClass("d-none");
@@ -17,9 +23,9 @@ onAuthStateChanged(auth, user => {
 });
 
 $("#btn-sign-in-google").on('click', async () => {
-    try {
-        const result = await signInWithPopup(auth, provider);
-    } catch (e) {
-        console.log(e);
-    }
+    await signInWithPopup(auth, provider);
+});
+
+$("#btn-sign-out").on('click', async () => {
+    await signOut(auth);
 });

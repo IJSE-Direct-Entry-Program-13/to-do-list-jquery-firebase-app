@@ -1,8 +1,19 @@
 import './auth.js';
 import $ from 'jquery';
 import {auth, db} from './firebase.config.js';
-import {where, query, orderBy, addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc} from "firebase/firestore";
-import {onAuthStateChanged} from "firebase/auth";
+import {
+    addDoc,
+    collection,
+    deleteDoc,
+    doc,
+    getDocs,
+    orderBy,
+    query,
+    serverTimestamp,
+    updateDoc,
+    where
+} from "firebase/firestore";
+import {onAuthStateChanged, signOut} from "firebase/auth";
 
 class Task {
     id;
@@ -16,17 +27,17 @@ class Task {
     }
 }
 
-const taskLists = [];
+let taskLists = [];
 let loggedUser = null;
 
-onAuthStateChanged(auth, async user=>{
-    if (user){
+onAuthStateChanged(auth, async user => {
+    if (user) {
         loggedUser = user.email;
         await loadDbTasks();
         renderTasks();
         $("#loader-wrapper").addClass("d-none");
         $("#task-lists-wrapper").removeClass("d-none");
-    }else{
+    } else {
         loggedUser = null;
     }
 });
@@ -169,3 +180,8 @@ async function updateDbTaskStatus(taskId, description, status) {
         return false;
     }
 }
+
+$("#btn-sign-out").on('click', async ()=>{
+    await signOut(auth);
+    taskLists = [];
+});

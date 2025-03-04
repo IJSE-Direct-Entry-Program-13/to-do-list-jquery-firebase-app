@@ -1,5 +1,6 @@
 import $ from 'jquery';
-import {app} from './firebase.config.js';
+import {db} from './firebase.config.js';
+import {addDoc, collection, getDocs, serverTimestamp} from "firebase/firestore";
 
 class Task {
     id;
@@ -13,14 +14,9 @@ class Task {
     }
 }
 
-const taskLists = [
-    // new Task(1, "Task 1"),
-    // new Task(2, "Task 2"),
-    // new Task(3, "Task 3", true),
-    // new Task(4, "Task 4"),
-    // new Task(5, "Task 5", true)
-];
+const taskLists = [];
 
+await loadDbTasks();
 renderTasks();
 
 let lastTaskId = taskLists.length;
@@ -29,6 +25,7 @@ let currentTask = null;
 $("#frm-task").on('submit', () => {
     const txtTask = $("#txt-task");
     if (!currentTask) {
+
         taskLists.push(new Task(++lastTaskId, txtTask.val().trim()));
     } else {
         currentTask.description = txtTask.val().trim();
@@ -90,11 +87,35 @@ function renderTasks() {
 
 $("#chk-mode")
     .on('change', function () {
-    const darkMode = $(this).prop("checked");
-    $("html").attr("data-bs-theme", darkMode ? "dark" : "light");
-})
+        const darkMode = $(this).prop("checked");
+        $("html").attr("data-bs-theme", darkMode ? "dark" : "light");
+    })
 
-if (matchMedia('(prefers-color-scheme: dark)').matches){
+if (matchMedia('(prefers-color-scheme: dark)').matches) {
     $("#chk-mode").trigger('click');
+}
+
+async function loadDbTasks() {
+    const collectionRef = collection(db, "/task");
+    const docsSnapshot = await getDocs(collectionRef);
+    docsSnapshot.forEach(doc => {
+        taskLists.push(new Task(doc.id,
+            doc.data().description,
+            doc.data().status));
+    });
+}
+
+async function addTask(description, status = false) {
+    try {
+        const collectionRef = collection(db, "/task");
+        const docRef = await addDoc(collectionRef, {
+            description,
+            status,
+            createdAt: serverTimestamp()
+        });
+        return docRef.id;
+    } catch (e) {
+        console.log(e);
+    }
 }
 

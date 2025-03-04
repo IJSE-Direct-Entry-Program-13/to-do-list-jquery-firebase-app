@@ -27,9 +27,9 @@ let currentTask = null;
 
 $("#frm-task").on('submit', () => {
     const txtTask = $("#txt-task");
-    if (!currentTask){
+    if (!currentTask) {
         taskLists.push(new Task(++lastTaskId, txtTask.val().trim()));
-    }else{
+    } else {
         currentTask.description = txtTask.val().trim();
         currentTask = null;
         $("#frm-task button").text('Add');
@@ -83,6 +83,17 @@ function renderTasks() {
             </div>        
         `;
         $(!status ? "#task-list > section" :
-            "#completed-task-list > section").append(task);
+            "#completed-task-list > section").prepend(task);
     }
 }
+
+$("#chk-mode")
+    .on('change', function () {
+    const darkMode = $(this).prop("checked");
+    $("html").attr("data-bs-theme", darkMode ? "dark" : "light");
+})
+
+if (matchMedia('(prefers-color-scheme: dark)').matches){
+    $("#chk-mode").trigger('click');
+}
+

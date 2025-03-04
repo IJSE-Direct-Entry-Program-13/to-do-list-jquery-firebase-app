@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import {db} from './firebase.config.js';
-import {addDoc, collection, getDocs, serverTimestamp} from "firebase/firestore";
+import {addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc} from "firebase/firestore";
 
 class Task {
     id;
@@ -27,26 +27,34 @@ $("#frm-task").on('submit', async () => {
     if (!currentTask) {
         const taskId = await addDbTask(txtTask.val().trim());
         if (taskId)
-        taskLists.push(new Task(taskId, txtTask.val().trim()));
+            taskLists.push(new Task(taskId, txtTask.val().trim()));
     } else {
-        currentTask.description = txtTask.val().trim();
-        currentTask = null;
-        $("#frm-task button").text('Add');
+        if (await updateDbTaskStatus(currentTask.id,
+            txtTask.val().trim(), currentTask.status)) {
+            currentTask.description = txtTask.val().trim();
+            currentTask = null;
+            $("#frm-task button").text('Add');
+        }
     }
     renderTasks();
     txtTask.val("").trigger('focus');
 });
 
 $('#task-list > section, #completed-task-list > section')
-    .on('change', '.task-item input[type="checkbox"]', (e) => {
+    .on('change', '.task-item input[type="checkbox"]', async (e) => {
         const task = taskLists.find(task => task.id === e.currentTarget.id);
-        task.status = !task.status;
-        renderTasks();
-    }).on('click', '.bi-trash', (e) => {
+        if (await updateDbTaskStatus(task.id,
+            task.description, !task.status)) {
+            task.status = !task.status;
+            renderTasks();
+        }
+    }).on('click', '.bi-trash', async (e) => {
     const taskId = $(e.currentTarget).parents(".task-item").find('input[type="checkbox"]').prop("id");
     const taskIndex = taskLists.findIndex(task => task.id === taskId);
-    taskLists.splice(taskIndex, 1);
-    renderTasks();
+    if (await deleteDbTask(taskId)) {
+        taskLists.splice(taskIndex, 1);
+        renderTasks();
+    }
 }).on('click', '.bi-pencil', (e) => {
     $(".task-item-selected").removeClass('task-item-selected');
     const taskId = $(e.currentTarget).parents(".task-item")
@@ -120,3 +128,29 @@ async function addDbTask(description, status = false) {
     }
 }
 
+async function deleteDbTask(taskId) {
+    try {
+        taskId = taskId.replace('task-', '');
+        const docRef = doc(db, `/task/${taskId}`);
+        await deleteDoc(docRef);
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
+async function updateDbTaskStatus(taskId, description, status) {
+    try {
+        taskId = taskId.replace('task-', '');
+        const docRef = doc(db, `/task/${taskId}`);
+        await updateDoc(docRef, {
+            description,
+            status
+        });
+        return true;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}

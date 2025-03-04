@@ -1,7 +1,7 @@
 import './auth.js';
 import $ from 'jquery';
 import {auth, db} from './firebase.config.js';
-import {query, orderBy, addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc} from "firebase/firestore";
+import {where, query, orderBy, addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc} from "firebase/firestore";
 import {onAuthStateChanged} from "firebase/auth";
 
 class Task {
@@ -119,6 +119,7 @@ if (matchMedia('(prefers-color-scheme: dark)').matches) {
 async function loadDbTasks() {
     const collectionRef = collection(db, "/task");
     const docsSnapshot = await getDocs(query(collectionRef,
+        where("user", "==", loggedUser),
         orderBy("createdAt")));
     docsSnapshot.forEach(doc => {
         taskLists.push(new Task(doc.id,
@@ -133,7 +134,8 @@ async function addDbTask(description, status = false) {
         const docRef = await addDoc(collectionRef, {
             description,
             status,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            user: loggedUser
         });
         return docRef.id;
     } catch (e) {

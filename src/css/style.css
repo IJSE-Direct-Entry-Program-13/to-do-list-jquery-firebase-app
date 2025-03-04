@@ -22,7 +22,7 @@ body {
     @media (width <= 425px) {
         #app {
             header h2 {
-                font-size: 1rem;
+                font-size: 1.1rem;
             }
 
             #mode-wrapper {
@@ -31,7 +31,15 @@ body {
         }
 
         #login {
-            margin: 5px;
+            margin: 2px;
+        }
+    }
+
+    @media (width <= 360px){
+        #app {
+            header h2 {
+                font-size: 1rem;
+            }
         }
     }
 

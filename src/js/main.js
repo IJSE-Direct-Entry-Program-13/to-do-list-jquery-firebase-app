@@ -1,3 +1,4 @@
+import './auth.js';
 import $ from 'jquery';
 import {db} from './firebase.config.js';
 import {query, orderBy, addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc} from "firebase/firestore";

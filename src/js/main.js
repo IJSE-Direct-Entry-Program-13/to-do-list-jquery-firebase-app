@@ -23,10 +23,17 @@ const taskLists = [
 renderTasks();
 
 let lastTaskId = taskLists.length;
+let currentTask = null;
 
 $("#frm-task").on('submit', () => {
     const txtTask = $("#txt-task");
-    taskLists.push(new Task(++lastTaskId, txtTask.val().trim()));
+    if (!currentTask){
+        taskLists.push(new Task(++lastTaskId, txtTask.val().trim()));
+    }else{
+        currentTask.description = txtTask.val().trim();
+        currentTask = null;
+        $("#frm-task button").text('Add');
+    }
     renderTasks();
     txtTask.val("").trigger('focus');
 });
@@ -37,10 +44,19 @@ $('#task-list > section, #completed-task-list > section')
         task.status = !task.status;
         renderTasks();
     }).on('click', '.bi-trash', (e) => {
-        const taskId = $(e.currentTarget).parents(".task-item").find('input[type="checkbox"]').prop("id");
-        const taskIndex = taskLists.findIndex(task => task.id === taskId);
-        taskLists.splice(taskIndex, 1);
-        renderTasks();
+    const taskId = $(e.currentTarget).parents(".task-item").find('input[type="checkbox"]').prop("id");
+    const taskIndex = taskLists.findIndex(task => task.id === taskId);
+    taskLists.splice(taskIndex, 1);
+    renderTasks();
+}).on('click', '.bi-pencil', (e) => {
+    $(".task-item-selected").removeClass('task-item-selected');
+    const taskId = $(e.currentTarget).parents(".task-item")
+        .addClass('task-item-selected')
+        .find('input[type="checkbox"]').prop("id");
+    currentTask = taskLists.find(task => task.id === taskId);
+    $("#txt-task").val(currentTask.description)
+        .trigger('focus').trigger('select');
+    $("#frm-task button").text("Update");
 });
 
 function renderTasks() {

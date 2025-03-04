@@ -18,6 +18,8 @@ const taskLists = [];
 
 await loadDbTasks();
 renderTasks();
+$("#loader-wrapper").addClass("d-none");
+$("#task-lists-wrapper").removeClass("d-none");
 
 //let lastTaskId = taskLists.length;
 let currentTask = null;

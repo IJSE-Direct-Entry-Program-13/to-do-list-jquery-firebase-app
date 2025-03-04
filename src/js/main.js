@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import {db} from './firebase.config.js';
-import {addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc} from "firebase/firestore";
+import {query, orderBy, addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc} from "firebase/firestore";
 
 class Task {
     id;
@@ -106,7 +106,8 @@ if (matchMedia('(prefers-color-scheme: dark)').matches) {
 
 async function loadDbTasks() {
     const collectionRef = collection(db, "/task");
-    const docsSnapshot = await getDocs(collectionRef);
+    const docsSnapshot = await getDocs(query(collectionRef,
+        orderBy("createdAt")));
     docsSnapshot.forEach(doc => {
         taskLists.push(new Task(doc.id,
             doc.data().description,
